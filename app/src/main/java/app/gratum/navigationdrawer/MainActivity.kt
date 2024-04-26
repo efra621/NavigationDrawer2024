@@ -10,44 +10,38 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import app.gratum.navigationdrawer.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    //Elementos q se usaran
-    private lateinit var drawerLayout: DrawerLayout //Vista
-    private lateinit var toolbar: Toolbar
-    private lateinit var navigationView: NavigationView //Menu de item
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        drawerLayout = findViewById(R.id.drawer_id)
+        setSupportActionBar(binding.toolbar) //Toolbar personalizada
 
-        toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar) //Toolbar personalizada
-
-        navigationView = findViewById(R.id.nav_view)
-        navigationView.setNavigationItemSelectedListener(this)
+        binding.navView.setNavigationItemSelectedListener(this) //NavView(Menu de items)
 
         //Permite al usuario cambiar entre 2 estados activado o desactivado
         val toggle = ActionBarDrawerToggle(
             this,
-            drawerLayout,
-            toolbar,
+            binding.drawerId,
+            binding.toolbar,
             R.string.open_nav,
             R.string.close
         )
 
-        drawerLayout.addDrawerListener(toggle)
+        binding.drawerId.addDrawerListener(toggle)
         toggle.syncState()
 
         if (savedInstanceState == null){
             replaceFragment(FirstFragment())
-            navigationView.setCheckedItem(R.id.nav_first_menu)
+            binding.navView.setCheckedItem(R.id.nav_first_menu)
         }
-
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -58,7 +52,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             else -> Toast.makeText(this, "Hola", Toast.LENGTH_SHORT).show()
         }
-        drawerLayout.closeDrawer(GravityCompat.START)
+        binding.drawerId.closeDrawer(GravityCompat.START)
         return true
     }
 
@@ -68,6 +62,4 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         tranaction.replace(R.id.fragment_container,fragment)
         tranaction.commit()
     }
-
-
 }
